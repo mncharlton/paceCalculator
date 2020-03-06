@@ -83,7 +83,7 @@ initialModel =
     , timeSeconds = 0
     , miles = 0
     , kilometres = 0
-    , distanceUnit = "km"
+    , distanceUnit = "none"
     }
 
 
@@ -208,9 +208,9 @@ update msg model =
 -- VIEW
 
 
-viewResults : Float -> Float -> Float -> Html msg
-viewResults distance kmPace milePace =
-    if distance > 0 && kmPace > 0 then
+viewResults : Float -> String -> Float -> Float -> Html msg
+viewResults distance unit kmPace milePace =
+    if distance > 0 && kmPace > 0 && unit /= "none" then
         span []
             [ h2 [] [ text "Pace" ]
             , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours kmPace) ++ ":" ++ precedingZeroCheck (calculateMinutes kmPace) ++ ":" ++ precedingZeroCheck (calculateSeconds kmPace) ++ " per km") ]
@@ -225,22 +225,41 @@ view : Model -> Html Msg
 view model =
     div [ Attr.class "background" ]
         [ div [ Attr.class "calculator" ]
-            [ h1 [] [ text "Pace Calculator" ]
-            , p [] [ text "Enter the details below to calculate your pace" ]
-            , h2 [] [ text "Time" ]
-            , label [ Attr.for "hours" ] [ text "Hours" ]
-            , input [ Attr.type_ "number", Attr.name "hours", Attr.placeholder "00", Attr.min "0", Attr.max "99", onInput ChangeHours ] []
-            , label [ Attr.for "minutes" ] [ text "Minutes" ]
-            , input [ Attr.type_ "number", Attr.name "minutes", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeMinutes ] []
-            , label [ Attr.for "seconds" ] [ text "Seconds" ]
-            , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
-            , h2 [] [ text "Distance" ]
-            , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
-            , select [ Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
-                [ option [ Attr.value "km" ] [ text "km" ]
-                , option [ Attr.value "mile" ] [ text "miles" ]
+            [ div []
+                [ h1 [] [ text "Pace Calculator" ]
+                , p [] [ text "Enter the details below to calculate your pace" ]
+                , h2 [] [ text "Time" ]
+                , div [ Attr.class "timeFields" ]
+                    [ div [ Attr.class "field" ]
+                        [ label [ Attr.for "hours" ] [ text "Hours" ]
+                        , input [ Attr.type_ "number", Attr.name "hours", Attr.placeholder "00", Attr.min "0", Attr.max "99", onInput ChangeHours ] []
+                        ]
+                    , div [ Attr.class "field" ]
+                        [ label [ Attr.for "minutes" ] [ text "Minutes" ]
+                        , input [ Attr.type_ "number", Attr.name "minutes", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeMinutes ] []
+                        ]
+                    , div [ Attr.class "field" ]
+                        [ label [ Attr.for "seconds" ] [ text "Seconds" ]
+                        , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
+                        ]
+                    ]
+                , h2 [] [ text "Distance" ]
+                , div [ Attr.class "distanceFields" ]
+                    [ div [ Attr.class "field" ]
+                        [ label [ Attr.for "distance" ] [ text "distance" ]
+                        , input [ Attr.type_ "number", Attr.name "distance", Attr.placeholder "00", onInput ChangeDistance ] []
+                        ]
+                    , div [ Attr.class "field" ]
+                        [ label [ Attr.for "distanceUnits" ] [ text "Miles/Km" ]
+                        , select [ Attr.name "distanceUnits", Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
+                            [ option [ Attr.selected True, Attr.disabled True ] [ text "--Select--" ]
+                            , option [ Attr.value "km" ] [ text "km" ]
+                            , option [ Attr.value "mile" ] [ text "miles" ]
+                            ]
+                        ]
+                    ]
+                , viewResults model.kilometres model.distanceUnit model.kmPace model.milePace
                 ]
-            , viewResults model.kilometres model.kmPace model.milePace
             ]
         , footer [ Attr.class "footer" ]
             [ p [ Attr.id "footerText" ] [ text "Pace Calculator by Matt Charlton" ]

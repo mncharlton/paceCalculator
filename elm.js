@@ -4355,7 +4355,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$PaceCalculator$initialModel = {distanceUnit: 'km', kilometres: 0, kmPace: 0, milePace: 0, miles: 0, timeHours: 0, timeMinutes: 0, timeSeconds: 0};
+var $author$project$PaceCalculator$initialModel = {distanceUnit: 'none', kilometres: 0, kmPace: 0, milePace: 0, miles: 0, timeHours: 0, timeMinutes: 0, timeSeconds: 0};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5332,6 +5332,15 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
@@ -5381,6 +5390,7 @@ var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$html$Html$select = _VirtualDom_node('select');
+var $elm$html$Html$Attributes$selected = $elm$html$Html$Attributes$boolProperty('selected');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
@@ -5396,13 +5406,14 @@ var $author$project$PaceCalculator$calculateSeconds = function (seconds) {
 	return $elm$core$Basics$floor(
 		(seconds - (($author$project$PaceCalculator$calculateHours(seconds) * 60) * 60)) - ($author$project$PaceCalculator$calculateMinutes(seconds) * 60));
 };
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$PaceCalculator$precedingZeroCheck = function (value) {
 	return (value < 10) ? ('0' + $elm$core$String$fromInt(value)) : $elm$core$String$fromInt(value);
 };
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $author$project$PaceCalculator$viewResults = F3(
-	function (distance, kmPace, milePace) {
-		return ((distance > 0) && (kmPace > 0)) ? A2(
+var $author$project$PaceCalculator$viewResults = F4(
+	function (distance, unit, kmPace, milePace) {
+		return ((distance > 0) && ((kmPace > 0) && (unit !== 'none'))) ? A2(
 			$elm$html$Html$span,
 			_List_Nil,
 			_List_fromArray(
@@ -5468,139 +5479,241 @@ var $author$project$PaceCalculator$view = function (model) {
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h1,
+						$elm$html$Html$div,
 						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Pace Calculator')
-							])),
-						A2(
-						$elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Enter the details below to calculate your pace')
-							])),
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Time')
-							])),
-						A2(
-						$elm$html$Html$label,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$for('hours')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Hours')
-							])),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('number'),
-								$elm$html$Html$Attributes$name('hours'),
-								$elm$html$Html$Attributes$placeholder('00'),
-								$elm$html$Html$Attributes$min('0'),
-								$elm$html$Html$Attributes$max('99'),
-								$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeHours)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$label,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$for('minutes')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Minutes')
-							])),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('number'),
-								$elm$html$Html$Attributes$name('minutes'),
-								$elm$html$Html$Attributes$placeholder('00'),
-								$elm$html$Html$Attributes$min('0'),
-								$elm$html$Html$Attributes$max('59'),
-								$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeMinutes)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$label,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$for('seconds')
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Seconds')
-							])),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('number'),
-								$elm$html$Html$Attributes$name('seconds'),
-								$elm$html$Html$Attributes$placeholder('00'),
-								$elm$html$Html$Attributes$min('0'),
-								$elm$html$Html$Attributes$max('59'),
-								$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeSeconds)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Distance')
-							])),
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$type_('number'),
-								$elm$html$Html$Attributes$placeholder('Distance'),
-								$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeDistance)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$select,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$id('distanceUnit'),
-								$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeDistanceUnit)
-							]),
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$option,
+								$elm$html$Html$h1,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$value('km')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('km')
+										$elm$html$Html$text('Pace Calculator')
 									])),
 								A2(
-								$elm$html$Html$option,
+								$elm$html$Html$p,
+								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$value('mile')
+										$elm$html$Html$text('Enter the details below to calculate your pace')
+									])),
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Time')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('timeFields')
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('miles')
-									]))
-							])),
-						A3($author$project$PaceCalculator$viewResults, model.kilometres, model.kmPace, model.milePace)
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('field')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$label,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$for('hours')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Hours')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('number'),
+														$elm$html$Html$Attributes$name('hours'),
+														$elm$html$Html$Attributes$placeholder('00'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('99'),
+														$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeHours)
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('field')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$label,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$for('minutes')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Minutes')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('number'),
+														$elm$html$Html$Attributes$name('minutes'),
+														$elm$html$Html$Attributes$placeholder('00'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('59'),
+														$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeMinutes)
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('field')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$label,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$for('seconds')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Seconds')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('number'),
+														$elm$html$Html$Attributes$name('seconds'),
+														$elm$html$Html$Attributes$placeholder('00'),
+														$elm$html$Html$Attributes$min('0'),
+														$elm$html$Html$Attributes$max('59'),
+														$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeSeconds)
+													]),
+												_List_Nil)
+											]))
+									])),
+								A2(
+								$elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Distance')
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('distanceFields')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('field')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$label,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$for('distance')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('distance')
+													])),
+												A2(
+												$elm$html$Html$input,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$type_('number'),
+														$elm$html$Html$Attributes$name('distance'),
+														$elm$html$Html$Attributes$placeholder('00'),
+														$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeDistance)
+													]),
+												_List_Nil)
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('field')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$label,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$for('distanceUnits')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Miles/Km')
+													])),
+												A2(
+												$elm$html$Html$select,
+												_List_fromArray(
+													[
+														$elm$html$Html$Attributes$name('distanceUnits'),
+														$elm$html$Html$Attributes$id('distanceUnit'),
+														$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeDistanceUnit)
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$option,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$selected(true),
+																$elm$html$Html$Attributes$disabled(true)
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('--Select--')
+															])),
+														A2(
+														$elm$html$Html$option,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$value('km')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('km')
+															])),
+														A2(
+														$elm$html$Html$option,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$value('mile')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('miles')
+															]))
+													]))
+											]))
+									])),
+								A4($author$project$PaceCalculator$viewResults, model.kilometres, model.distanceUnit, model.kmPace, model.milePace)
+							]))
 					])),
 				A2(
 				$elm$html$Html$footer,
@@ -5610,6 +5723,16 @@ var $author$project$PaceCalculator$view = function (model) {
 					]),
 				_List_fromArray(
 					[
+						A2(
+						$elm$html$Html$p,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$id('footerText')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Pace Calculator by Matt Charlton')
+							])),
 						A2(
 						$elm$html$Html$p,
 						_List_fromArray(
