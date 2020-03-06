@@ -4355,7 +4355,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$PaceCalculator$initialModel = {distance: 0, distanceUnit: 'km', timeHours: 0, timeMinutes: 0, timeSeconds: 0, totalSeconds: 0};
+var $author$project$PaceCalculator$initialModel = {distanceUnit: 'km', kilometres: 0, kmPace: 0, milePace: 0, miles: 0, timeHours: 0, timeMinutes: 0, timeSeconds: 0};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5195,65 +5195,117 @@ var $author$project$PaceCalculator$update = F2(
 		switch (msg.$) {
 			case 'ChangeDistance':
 				var string = msg.a;
+				var newMiles = (model.distanceUnit === 'km') ? ($author$project$PaceCalculator$parseFloat(string) * 0.621371) : $author$project$PaceCalculator$parseFloat(string);
+				var newMilePace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					newMiles,
+					A3($author$project$PaceCalculator$calculateTotalSeconds, model.timeHours, model.timeMinutes, model.timeSeconds));
+				var newKilometres = (model.distanceUnit === 'km') ? $author$project$PaceCalculator$parseFloat(string) : ($author$project$PaceCalculator$parseFloat(string) * 1.609341);
+				var newKmPace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					newKilometres,
+					A3($author$project$PaceCalculator$calculateTotalSeconds, model.timeHours, model.timeMinutes, model.timeSeconds));
 				return _Utils_update(
 					model,
-					{
-						distance: $author$project$PaceCalculator$parseFloat(string),
-						totalSeconds: A2(
-							$author$project$PaceCalculator$calculatePaceSeconds,
-							$author$project$PaceCalculator$parseFloat(string),
-							A3($author$project$PaceCalculator$calculateTotalSeconds, model.timeHours, model.timeMinutes, model.timeSeconds))
-					});
+					{kilometres: newKilometres, kmPace: newKmPace, milePace: newMilePace, miles: newMiles});
 			case 'ChangeHours':
 				var string = msg.a;
+				var newMilePace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.miles,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						$author$project$PaceCalculator$parseFloat(string),
+						model.timeMinutes,
+						model.timeSeconds));
+				var newKmPace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.kilometres,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						$author$project$PaceCalculator$parseFloat(string),
+						model.timeMinutes,
+						model.timeSeconds));
 				return _Utils_update(
 					model,
 					{
-						timeHours: $author$project$PaceCalculator$parseFloat(string),
-						totalSeconds: A2(
-							$author$project$PaceCalculator$calculatePaceSeconds,
-							model.distance,
-							A3(
-								$author$project$PaceCalculator$calculateTotalSeconds,
-								$author$project$PaceCalculator$parseFloat(string),
-								model.timeMinutes,
-								model.timeSeconds))
+						kmPace: newKmPace,
+						milePace: newMilePace,
+						timeHours: $author$project$PaceCalculator$parseFloat(string)
 					});
 			case 'ChangeMinutes':
 				var string = msg.a;
+				var newMilePace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.miles,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						$author$project$PaceCalculator$parseFloat(string),
+						model.timeSeconds));
+				var newKmPace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.kilometres,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						$author$project$PaceCalculator$parseFloat(string),
+						model.timeSeconds));
 				return _Utils_update(
 					model,
 					{
-						timeMinutes: $author$project$PaceCalculator$parseFloat(string),
-						totalSeconds: A2(
-							$author$project$PaceCalculator$calculatePaceSeconds,
-							model.distance,
-							A3(
-								$author$project$PaceCalculator$calculateTotalSeconds,
-								model.timeHours,
-								$author$project$PaceCalculator$parseFloat(string),
-								model.timeSeconds))
+						kmPace: newKmPace,
+						milePace: newMilePace,
+						timeMinutes: $author$project$PaceCalculator$parseFloat(string)
 					});
 			case 'ChangeSeconds':
 				var string = msg.a;
+				var newMilePace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.miles,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						model.timeMinutes,
+						$author$project$PaceCalculator$parseFloat(string)));
+				var newKmPace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					model.kilometres,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						model.timeMinutes,
+						$author$project$PaceCalculator$parseFloat(string)));
 				return _Utils_update(
 					model,
 					{
-						timeSeconds: $author$project$PaceCalculator$parseFloat(string),
-						totalSeconds: A2(
-							$author$project$PaceCalculator$calculatePaceSeconds,
-							model.distance,
-							A3(
-								$author$project$PaceCalculator$calculateTotalSeconds,
-								model.timeHours,
-								model.timeMinutes,
-								$author$project$PaceCalculator$parseFloat(string)))
+						kmPace: newKmPace,
+						milePace: newMilePace,
+						timeSeconds: $author$project$PaceCalculator$parseFloat(string)
 					});
 			default:
 				var string = msg.a;
+				var newMiles = (model.distanceUnit === 'km') ? model.kilometres : (model.miles * 0.621371);
+				var newMilePace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					newMiles,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						model.timeMinutes,
+						$author$project$PaceCalculator$parseFloat(string)));
+				var newKilometres = (model.distanceUnit === 'km') ? (model.kilometres * 1.609341) : model.miles;
+				var newKmPace = A2(
+					$author$project$PaceCalculator$calculatePaceSeconds,
+					newKilometres,
+					A3(
+						$author$project$PaceCalculator$calculateTotalSeconds,
+						model.timeHours,
+						model.timeMinutes,
+						$author$project$PaceCalculator$parseFloat(string)));
 				return _Utils_update(
 					model,
-					{distanceUnit: string});
+					{distanceUnit: string, kilometres: newKilometres, kmPace: newKmPace, milePace: newMilePace, miles: newMiles});
 		}
 	});
 var $author$project$PaceCalculator$ChangeDistance = function (a) {
@@ -5293,6 +5345,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
@@ -5342,6 +5395,7 @@ var $author$project$PaceCalculator$precedingZeroCheck = function (value) {
 	return (value < 10) ? ('0' + $elm$core$String$fromInt(value)) : $elm$core$String$fromInt(value);
 };
 var $elm$html$Html$select = _VirtualDom_node('select');
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
@@ -5481,7 +5535,7 @@ var $author$project$PaceCalculator$view = function (model) {
 						$elm$html$Html$option,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$value('miles')
+								$elm$html$Html$Attributes$value('mile')
 							]),
 						_List_fromArray(
 							[
@@ -5489,18 +5543,61 @@ var $author$project$PaceCalculator$view = function (model) {
 							]))
 					])),
 				A2(
-				$elm$html$Html$p,
+				$elm$html$Html$span,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$id('output')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						'Distance Unit: ' + (model.distanceUnit + (', Pace : ' + ($author$project$PaceCalculator$precedingZeroCheck(
-							$author$project$PaceCalculator$calculateHours(model.totalSeconds)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
-							$author$project$PaceCalculator$calculateMinutes(model.totalSeconds)) + (':' + $author$project$PaceCalculator$precedingZeroCheck(
-							$author$project$PaceCalculator$calculateSeconds(model.totalSeconds)))))))))
+						A2(
+						$elm$html$Html$h2,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Pace')
+							])),
+						A2(
+						$elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								'mile Pace: ' + ($elm$core$String$fromFloat(model.milePace) + (', km Pace: ' + $elm$core$String$fromFloat(model.kmPace))))
+							])),
+						A2(
+						$elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								'miles: ' + ($elm$core$String$fromFloat(model.miles) + (', km: ' + $elm$core$String$fromFloat(model.kilometres))))
+							])),
+						A2(
+						$elm$html$Html$p,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$id('output')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateHours(model.kmPace)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateMinutes(model.kmPace)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateSeconds(model.kmPace)) + ' per km')))))
+							])),
+						A2(
+						$elm$html$Html$p,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$id('output')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateHours(model.milePace)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateMinutes(model.milePace)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
+									$author$project$PaceCalculator$calculateSeconds(model.milePace)) + ' per mile')))))
+							]))
 					]))
 			]));
 };

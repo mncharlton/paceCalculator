@@ -63,22 +63,26 @@ calculateSeconds seconds =
 
 
 type alias Model =
-    { totalSeconds : Float
+    { milePace : Float
+    , kmPace : Float
     , timeHours : Float
     , timeMinutes : Float
     , timeSeconds : Float
-    , distance : Float
+    , miles : Float
+    , kilometres : Float
     , distanceUnit : String
     }
 
 
 initialModel : Model
 initialModel =
-    { totalSeconds = 0
+    { milePace = 0
+    , kmPace = 0
     , timeHours = 0
     , timeMinutes = 0
     , timeSeconds = 0
-    , distance = 0
+    , miles = 0
+    , kilometres = 0
     , distanceUnit = "km"
     }
 
@@ -99,19 +103,105 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ChangeDistance string ->
-            { model | distance = parseFloat string, totalSeconds = calculatePaceSeconds (parseFloat string) (calculateTotalSeconds model.timeHours model.timeMinutes model.timeSeconds) }
+            let
+                newKilometres =
+                    if model.distanceUnit == "km" then
+                        parseFloat string
+
+                    else
+                        parseFloat string * 1.609341
+
+                newMiles =
+                    if model.distanceUnit == "km" then
+                        parseFloat string * 0.621371
+
+                    else
+                        parseFloat string
+
+                newMilePace =
+                    calculatePaceSeconds newMiles (calculateTotalSeconds model.timeHours model.timeMinutes model.timeSeconds)
+
+                newKmPace =
+                    calculatePaceSeconds newKilometres (calculateTotalSeconds model.timeHours model.timeMinutes model.timeSeconds)
+            in
+            { model
+                | kilometres = newKilometres
+                , miles = newMiles
+                , milePace = newMilePace
+                , kmPace = newKmPace
+            }
 
         ChangeHours string ->
-            { model | timeHours = parseFloat string, totalSeconds = calculatePaceSeconds model.distance (calculateTotalSeconds (parseFloat string) model.timeMinutes model.timeSeconds) }
+            let
+                newMilePace =
+                    calculatePaceSeconds model.miles (calculateTotalSeconds (parseFloat string) model.timeMinutes model.timeSeconds)
+
+                newKmPace =
+                    calculatePaceSeconds model.kilometres (calculateTotalSeconds (parseFloat string) model.timeMinutes model.timeSeconds)
+            in
+            { model
+                | milePace = newMilePace
+                , kmPace = newKmPace
+                , timeHours = parseFloat string
+            }
 
         ChangeMinutes string ->
-            { model | timeMinutes = parseFloat string, totalSeconds = calculatePaceSeconds model.distance (calculateTotalSeconds model.timeHours (parseFloat string) model.timeSeconds) }
+            let
+                newMilePace =
+                    calculatePaceSeconds model.miles (calculateTotalSeconds model.timeHours (parseFloat string) model.timeSeconds)
+
+                newKmPace =
+                    calculatePaceSeconds model.kilometres (calculateTotalSeconds model.timeHours (parseFloat string) model.timeSeconds)
+            in
+            { model
+                | milePace = newMilePace
+                , kmPace = newKmPace
+                , timeMinutes = parseFloat string
+            }
 
         ChangeSeconds string ->
-            { model | timeSeconds = parseFloat string, totalSeconds = calculatePaceSeconds model.distance (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string)) }
+            let
+                newMilePace =
+                    calculatePaceSeconds model.miles (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string))
+
+                newKmPace =
+                    calculatePaceSeconds model.kilometres (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string))
+            in
+            { model
+                | milePace = newMilePace
+                , kmPace = newKmPace
+                , timeSeconds = parseFloat string
+            }
 
         ChangeDistanceUnit string ->
-            { model | distanceUnit = string }
+            let
+                newMiles =
+                    if model.distanceUnit == "km" then
+                        model.kilometres
+
+                    else
+                        model.miles * 0.621371
+
+                newKilometres =
+                    if model.distanceUnit == "km" then
+                        model.kilometres * 1.609341
+
+                    else
+                        model.miles
+
+                newMilePace =
+                    calculatePaceSeconds newMiles (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string))
+
+                newKmPace =
+                    calculatePaceSeconds newKilometres (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string))
+            in
+            { model
+                | distanceUnit = string
+                , miles = newMiles
+                , kilometres = newKilometres
+                , milePace = newMilePace
+                , kmPace = newKmPace
+            }
 
 
 
@@ -134,7 +224,13 @@ view model =
         , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
         , select [ Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
             [ option [ Attr.value "km" ] [ text "km" ]
-            , option [ Attr.value "miles" ] [ text "miles" ]
+            , option [ Attr.value "mile" ] [ text "miles" ]
             ]
-        , p [ Attr.id "output" ] [ text ("Distance Unit: " ++ model.distanceUnit ++ ", Pace : " ++ precedingZeroCheck (calculateHours model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateMinutes model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateSeconds model.totalSeconds)) ]
+        , span []
+            [ h2 [] [ text "Pace" ]
+            , p [] [ text ("mile Pace: " ++ String.fromFloat model.milePace ++ ", km Pace: " ++ String.fromFloat model.kmPace) ]
+            , p [] [ text ("miles: " ++ String.fromFloat model.miles ++ ", km: " ++ String.fromFloat model.kilometres) ]
+            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours model.kmPace) ++ ":" ++ precedingZeroCheck (calculateMinutes model.kmPace) ++ ":" ++ precedingZeroCheck (calculateSeconds model.kmPace) ++ " per km") ]
+            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours model.milePace) ++ ":" ++ precedingZeroCheck (calculateMinutes model.milePace) ++ ":" ++ precedingZeroCheck (calculateSeconds model.milePace) ++ " per mile") ]
+            ]
         ]
