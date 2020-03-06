@@ -4355,7 +4355,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$PaceCalculator$initialModel = {distance: 0, timeHours: 0, timeMinutes: 0, timeSeconds: 0, totalSeconds: 0};
+var $author$project$PaceCalculator$initialModel = {distance: 0, distanceUnit: 'km', timeHours: 0, timeMinutes: 0, timeSeconds: 0, totalSeconds: 0};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5234,7 +5234,7 @@ var $author$project$PaceCalculator$update = F2(
 								$author$project$PaceCalculator$parseFloat(string),
 								model.timeSeconds))
 					});
-			default:
+			case 'ChangeSeconds':
 				var string = msg.a;
 				return _Utils_update(
 					model,
@@ -5249,10 +5249,18 @@ var $author$project$PaceCalculator$update = F2(
 								model.timeMinutes,
 								$author$project$PaceCalculator$parseFloat(string)))
 					});
+			default:
+				var string = msg.a;
+				return _Utils_update(
+					model,
+					{distanceUnit: string});
 		}
 	});
 var $author$project$PaceCalculator$ChangeDistance = function (a) {
 	return {$: 'ChangeDistance', a: a};
+};
+var $author$project$PaceCalculator$ChangeDistanceUnit = function (a) {
+	return {$: 'ChangeDistanceUnit', a: a};
 };
 var $author$project$PaceCalculator$ChangeHours = function (a) {
 	return {$: 'ChangeHours', a: a};
@@ -5327,14 +5335,17 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
+var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $author$project$PaceCalculator$precedingZeroCheck = function (value) {
 	return (value < 10) ? ('0' + $elm$core$String$fromInt(value)) : $elm$core$String$fromInt(value);
 };
+var $elm$html$Html$select = _VirtualDom_node('select');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$PaceCalculator$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5448,6 +5459,36 @@ var $author$project$PaceCalculator$view = function (model) {
 					]),
 				_List_Nil),
 				A2(
+				$elm$html$Html$select,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('distanceUnit'),
+						$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeDistanceUnit)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('km')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('km')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('miles')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('miles')
+							]))
+					])),
+				A2(
 				$elm$html$Html$p,
 				_List_fromArray(
 					[
@@ -5456,10 +5497,10 @@ var $author$project$PaceCalculator$view = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						'Pace : ' + ($author$project$PaceCalculator$precedingZeroCheck(
+						'Distance Unit: ' + (model.distanceUnit + (', Pace : ' + ($author$project$PaceCalculator$precedingZeroCheck(
 							$author$project$PaceCalculator$calculateHours(model.totalSeconds)) + (':' + ($author$project$PaceCalculator$precedingZeroCheck(
 							$author$project$PaceCalculator$calculateMinutes(model.totalSeconds)) + (':' + $author$project$PaceCalculator$precedingZeroCheck(
-							$author$project$PaceCalculator$calculateSeconds(model.totalSeconds)))))))
+							$author$project$PaceCalculator$calculateSeconds(model.totalSeconds)))))))))
 					]))
 			]));
 };

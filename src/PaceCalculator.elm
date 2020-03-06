@@ -68,6 +68,7 @@ type alias Model =
     , timeMinutes : Float
     , timeSeconds : Float
     , distance : Float
+    , distanceUnit : String
     }
 
 
@@ -78,6 +79,7 @@ initialModel =
     , timeMinutes = 0
     , timeSeconds = 0
     , distance = 0
+    , distanceUnit = "km"
     }
 
 
@@ -90,6 +92,7 @@ type Msg
     | ChangeHours String
     | ChangeMinutes String
     | ChangeSeconds String
+    | ChangeDistanceUnit String
 
 
 update : Msg -> Model -> Model
@@ -106,6 +109,9 @@ update msg model =
 
         ChangeSeconds string ->
             { model | timeSeconds = parseFloat string, totalSeconds = calculatePaceSeconds model.distance (calculateTotalSeconds model.timeHours model.timeMinutes (parseFloat string)) }
+
+        ChangeDistanceUnit string ->
+            { model | distanceUnit = string }
 
 
 
@@ -126,5 +132,9 @@ view model =
         , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
         , h2 [] [ text "Distance" ]
         , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
-        , p [ Attr.id "output" ] [ text ("Pace : " ++ precedingZeroCheck (calculateHours model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateMinutes model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateSeconds model.totalSeconds)) ]
+        , select [ Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
+            [ option [ Attr.value "km" ] [ text "km" ]
+            , option [ Attr.value "miles" ] [ text "miles" ]
+            ]
+        , p [ Attr.id "output" ] [ text ("Distance Unit: " ++ model.distanceUnit ++ ", Pace : " ++ precedingZeroCheck (calculateHours model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateMinutes model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateSeconds model.totalSeconds)) ]
         ]
