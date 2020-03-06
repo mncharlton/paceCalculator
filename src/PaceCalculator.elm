@@ -2,7 +2,7 @@ module PaceCalculator exposing (main)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes as Attr
 import Html.Events exposing (onClick, onInput)
 
 
@@ -114,14 +114,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "calculator" ]
+    div [ Attr.class "calculator" ]
         [ h1 [] [ text "Pace Calculator" ]
         , p [] [ text "Enter the details below to calculate your pace" ]
         , h2 [] [ text "Time" ]
-        , input [ type_ "number", name "hours", placeholder "Hours", onInput ChangeHours ] []
-        , input [ type_ "number", name "minutes", placeholder "Minutes", onInput ChangeMinutes ] []
-        , input [ type_ "number", name "seconds", placeholder "Seconds", onInput ChangeSeconds ] []
+        , label [ Attr.for "hours" ] [ text "Hours" ]
+        , input [ Attr.type_ "number", Attr.name "hours", Attr.placeholder "00", Attr.min "0", Attr.max "99", onInput ChangeHours ] []
+        , label [ Attr.for "minutes" ] [ text "Minutes" ]
+        , input [ Attr.type_ "number", Attr.name "minutes", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeMinutes ] []
+        , label [ Attr.for "seconds" ] [ text "Seconds" ]
+        , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
         , h2 [] [ text "Distance" ]
-        , input [ type_ "number", placeholder "Distance", onInput ChangeDistance ] []
-        , p [ id "output" ] [ text ("Pace : " ++ precedingZeroCheck (calculateHours model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateMinutes model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateSeconds model.totalSeconds)) ]
+        , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
+        , p [ Attr.id "output" ] [ text ("Pace : " ++ precedingZeroCheck (calculateHours model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateMinutes model.totalSeconds) ++ ":" ++ precedingZeroCheck (calculateSeconds model.totalSeconds)) ]
         ]

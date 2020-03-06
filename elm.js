@@ -5284,10 +5284,14 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -5362,32 +5366,68 @@ var $author$project$PaceCalculator$view = function (model) {
 						$elm$html$Html$text('Time')
 					])),
 				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('hours')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Hours')
+					])),
+				A2(
 				$elm$html$Html$input,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$name('hours'),
-						$elm$html$Html$Attributes$placeholder('Hours'),
+						$elm$html$Html$Attributes$placeholder('00'),
+						$elm$html$Html$Attributes$min('0'),
+						$elm$html$Html$Attributes$max('99'),
 						$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeHours)
 					]),
 				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('minutes')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Minutes')
+					])),
 				A2(
 				$elm$html$Html$input,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$name('minutes'),
-						$elm$html$Html$Attributes$placeholder('Minutes'),
+						$elm$html$Html$Attributes$placeholder('00'),
+						$elm$html$Html$Attributes$min('0'),
+						$elm$html$Html$Attributes$max('59'),
 						$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeMinutes)
 					]),
 				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('seconds')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Seconds')
+					])),
 				A2(
 				$elm$html$Html$input,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('number'),
 						$elm$html$Html$Attributes$name('seconds'),
-						$elm$html$Html$Attributes$placeholder('Seconds'),
+						$elm$html$Html$Attributes$placeholder('00'),
+						$elm$html$Html$Attributes$min('0'),
+						$elm$html$Html$Attributes$max('59'),
 						$elm$html$Html$Events$onInput($author$project$PaceCalculator$ChangeSeconds)
 					]),
 				_List_Nil),
