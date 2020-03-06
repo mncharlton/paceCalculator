@@ -208,29 +208,42 @@ update msg model =
 -- VIEW
 
 
+viewResults : Float -> Float -> Float -> Html msg
+viewResults distance kmPace milePace =
+    if distance > 0 && kmPace > 0 then
+        span []
+            [ h2 [] [ text "Pace" ]
+            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours kmPace) ++ ":" ++ precedingZeroCheck (calculateMinutes kmPace) ++ ":" ++ precedingZeroCheck (calculateSeconds kmPace) ++ " per km") ]
+            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours milePace) ++ ":" ++ precedingZeroCheck (calculateMinutes milePace) ++ ":" ++ precedingZeroCheck (calculateSeconds milePace) ++ " per mile") ]
+            ]
+
+    else
+        p [] [ text "Enter details above to work out your pace!" ]
+
+
 view : Model -> Html Msg
 view model =
-    div [ Attr.class "calculator" ]
-        [ h1 [] [ text "Pace Calculator" ]
-        , p [] [ text "Enter the details below to calculate your pace" ]
-        , h2 [] [ text "Time" ]
-        , label [ Attr.for "hours" ] [ text "Hours" ]
-        , input [ Attr.type_ "number", Attr.name "hours", Attr.placeholder "00", Attr.min "0", Attr.max "99", onInput ChangeHours ] []
-        , label [ Attr.for "minutes" ] [ text "Minutes" ]
-        , input [ Attr.type_ "number", Attr.name "minutes", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeMinutes ] []
-        , label [ Attr.for "seconds" ] [ text "Seconds" ]
-        , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
-        , h2 [] [ text "Distance" ]
-        , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
-        , select [ Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
-            [ option [ Attr.value "km" ] [ text "km" ]
-            , option [ Attr.value "mile" ] [ text "miles" ]
+    div [ Attr.class "background" ]
+        [ div [ Attr.class "calculator" ]
+            [ h1 [] [ text "Pace Calculator" ]
+            , p [] [ text "Enter the details below to calculate your pace" ]
+            , h2 [] [ text "Time" ]
+            , label [ Attr.for "hours" ] [ text "Hours" ]
+            , input [ Attr.type_ "number", Attr.name "hours", Attr.placeholder "00", Attr.min "0", Attr.max "99", onInput ChangeHours ] []
+            , label [ Attr.for "minutes" ] [ text "Minutes" ]
+            , input [ Attr.type_ "number", Attr.name "minutes", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeMinutes ] []
+            , label [ Attr.for "seconds" ] [ text "Seconds" ]
+            , input [ Attr.type_ "number", Attr.name "seconds", Attr.placeholder "00", Attr.min "0", Attr.max "59", onInput ChangeSeconds ] []
+            , h2 [] [ text "Distance" ]
+            , input [ Attr.type_ "number", Attr.placeholder "Distance", onInput ChangeDistance ] []
+            , select [ Attr.id "distanceUnit", onInput ChangeDistanceUnit ]
+                [ option [ Attr.value "km" ] [ text "km" ]
+                , option [ Attr.value "mile" ] [ text "miles" ]
+                ]
+            , viewResults model.kilometres model.kmPace model.milePace
             ]
-        , span []
-            [ h2 [] [ text "Pace" ]
-            , p [] [ text ("mile Pace: " ++ String.fromFloat model.milePace ++ ", km Pace: " ++ String.fromFloat model.kmPace) ]
-            , p [] [ text ("miles: " ++ String.fromFloat model.miles ++ ", km: " ++ String.fromFloat model.kilometres) ]
-            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours model.kmPace) ++ ":" ++ precedingZeroCheck (calculateMinutes model.kmPace) ++ ":" ++ precedingZeroCheck (calculateSeconds model.kmPace) ++ " per km") ]
-            , p [ Attr.id "output" ] [ text (precedingZeroCheck (calculateHours model.milePace) ++ ":" ++ precedingZeroCheck (calculateMinutes model.milePace) ++ ":" ++ precedingZeroCheck (calculateSeconds model.milePace) ++ " per mile") ]
+        , footer [ Attr.class "footer" ]
+            [ p [ Attr.id "footerText" ] [ text "Pace Calculator by Matt Charlton" ]
+            , p [ Attr.id "photoCredit" ] [ text "Photo by Andrea Leopardi on Unsplash" ]
             ]
         ]
