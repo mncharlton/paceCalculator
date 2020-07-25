@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Running Pace Calculator written in Elm.",
   "main": "elm.js",
+  "author": "Matt Charlton"
   "directories": {
     "test": "tests"
   },
