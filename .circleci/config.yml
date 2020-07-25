@@ -35,11 +35,8 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
-          name: Install netlify-cli
-          command: sudo npm install -g --silent netlify-cli
-      - run:
-          name: Deploy to Netlify
-          command: netlify deploy --dir=. -p
+          name: Deploy
+          command: curl -X POST -d {} ${deploy_hook}
 
 workflows:
   version: 2
