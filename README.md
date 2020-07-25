@@ -1,3 +1,3 @@
-Pace Calculator written in Elm - a WIP.
+Running Pace Calculator written in Elm.
 
 https://running-calculators.netlify.com/
