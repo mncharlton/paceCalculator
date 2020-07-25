@@ -16,9 +16,9 @@ jobs:
       - run:
           name: Elm make
           command: elm make src/PaceCalculator.elm
-      # - run:
-      #     name: NPM Install
-      #     command: npm install
+      - run:
+          name: npm install
+          command: npm install
       - run: npm test
       # - persist_to_workspace:
       #     root: ./
