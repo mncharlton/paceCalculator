@@ -1,7 +1,7 @@
 executors:
   node:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:10
 
 version: 2.1
 
@@ -11,19 +11,18 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install  elm
+          name: Run npm install
+          command: npm install
+      - run:
+          name: Install elm
           command: 'sudo npm install -g elm --unsafe-perm=true --allow-root'
       - run:
-          name: Elm make
+          name: Run elm make
           command: elm make src/PaceCalculator.elm
       - run:
-          name: npm install
-          command: npm install
-      - run: npm test
-      # - persist_to_workspace:
-      #     root: ./
-      #     # paths:
-      #     #   - public
+          name: Run Tests
+          command: npm test
+
 
   deploy:
     executor: node
