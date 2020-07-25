@@ -2,3 +2,6 @@ elm-stuff/
 node_modules/
 notes
 .DS_Store
+
+# Local Netlify folder
+.netlify
