@@ -136,5 +136,9 @@ suite =
                 \_ ->
                     PaceCalculator.calculateSeconds 3700
                         |> Expect.equal 40
+            , test "45s is 45s" <|
+                \_ ->
+                    PaceCalculator.calculateSeconds 45
+                        |> Expect.equal 45
             ]
         ]
