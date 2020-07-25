@@ -23,9 +23,9 @@ jobs:
           name: Run Tests
           command: npm test
       - persist_to_workspace:
-          root: ./
+          root: .
           paths:
-            - ./
+            - .
 
 
   deploy:
