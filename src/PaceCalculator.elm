@@ -1,4 +1,12 @@
-module PaceCalculator exposing (main)
+module PaceCalculator exposing
+    ( calculateHours
+    , calculateMinutes
+    , calculatePaceSeconds
+    , calculateSeconds
+    , calculateTotalSeconds
+    , main
+    , precedingZeroCheck
+    )
 
 import Browser
 import Html exposing (..)
