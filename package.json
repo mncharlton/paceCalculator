@@ -1,0 +1,27 @@
+{
+  "name": "pacecalculator",
+  "version": "1.0.0",
+  "description": "Running Pace Calculator written in Elm.",
+  "main": "elm.js",
+  "author": "Matt Charlton",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "elm-test": "^0.19.1-revision2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "elm-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mncharlton/paceCalculator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mncharlton/paceCalculator/issues"
+  },
+  "homepage": "https://github.com/mncharlton/paceCalculator#readme"
+}
